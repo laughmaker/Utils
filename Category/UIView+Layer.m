@@ -49,4 +49,50 @@
     return view;
 }
 
+
+- (void)startRotationAnimatingWithDuration:(CGFloat)duration
+{
+    CABasicAnimation *animation = [ CABasicAnimation animationWithKeyPath: @"transform" ];
+    animation.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
+    
+    //围绕Z轴旋转，垂直与屏幕
+    animation.toValue = [ NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 0.0, 0.0, 1.0) ];
+    animation.duration = duration;
+    //旋转效果累计，先转180度，接着再旋转180度，从而实现360旋转
+    animation.cumulative = YES;
+    animation.removedOnCompletion = NO;
+    animation.repeatCount = HUGE_VALL;
+
+    [self.layer setShouldRasterize:YES];//抗锯齿
+    [self.layer addAnimation:animation forKey:nil];
+    
+    //如果暂停了，则恢复动画运行
+    if (self.layer.speed == 0.0)
+    {
+        [self resumeAnimating];
+    }
+}
+
+- (void)stopRotationAnimating
+{
+    [self.layer removeAllAnimations];
+}
+
+- (void)pauseAnimating
+{
+    CFTimeInterval pausedTime = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.layer.speed = 0.0;
+    self.layer.timeOffset = pausedTime;
+}
+
+- (void)resumeAnimating
+{
+    CFTimeInterval pausedTime = [self.layer timeOffset];
+    self.layer.speed = 1.0;
+    self.layer.timeOffset = 0.0;
+    self.layer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
+    self.layer.beginTime = timeSincePause;
+}
+
 @end

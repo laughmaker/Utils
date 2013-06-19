@@ -20,4 +20,12 @@
  */
 + (UIView *)reflectImage:(UIImage *)image withFrame:(CGRect)frame opacity:(CGFloat)opacity atView:(UIView *)view;
 
+//开始和停止旋转动画
+- (void)startRotationAnimatingWithDuration:(CGFloat)duration;
+- (void)stopRotationAnimating;
+
+//暂停恢复动画
+- (void)pauseAnimating;
+- (void)resumeAnimating;
+
 @end
