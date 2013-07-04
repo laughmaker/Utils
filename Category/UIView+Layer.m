@@ -64,6 +64,7 @@
     animation.repeatCount = HUGE_VALL;
 
     [self.layer setShouldRasterize:YES];//抗锯齿
+    [self.layer setRasterizationScale:[[UIScreen mainScreen] scale]];
     [self.layer addAnimation:animation forKey:nil];
     
     //如果暂停了，则恢复动画运行
